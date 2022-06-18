@@ -1,12 +1,25 @@
-import { ApolloServer } from 'apollo-server-express'
+import { ApolloServer } from 'apollo-server-micro'
 import {ApolloServerPluginLandingPageGraphQLPlayground} from 'apollo-server-core';
 import { NextApiRequest, NextApiResponse } from 'next';
 import resolvers from '../../backend/graphql/resolvers';
 import typeDefs from '../../backend/graphql/TypeDef';
 import Cors from 'micro-cors';
+import connectDb from '../../backend/mongodb/mongoose';
 
-import connectDb from '../../backend/mongoose';
 
+// NOT INSIDE THE HANDLER FUNCTION BECAUSE ONLY NEED TO CONNECT TO MONGODB ONCE!
+connectDb();
+
+
+// CONFIG FOR LETTING DATA THROUGH BODY
+export const config = {
+    api: {
+        bodyParser: false,
+        externalResolver: false,
+    },
+}
+
+// INITIALIZE ALLOW CROSS ORIGIN 
 const cors = Cors();
 
 // CREATE THE SERVER WITH THE TYPE DEFS AND THE RESOLVERS
@@ -17,38 +30,37 @@ const server = new ApolloServer({
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
 });
 
+
 // TO USE TO START THE SERVER INSIDE THE HANDLER FUNCTION
 const startServer = server.start();
 
 
 // HANDLER FUNCTION (NEEDS TO BE LIKE THIS FOR NEXT.JS API ROUTES)
-export default cors(async function handler(req: NextApiRequest, res: NextApiResponse) {
-
+export default cors(async(req: NextApiRequest, res: NextApiResponse) => {
+   
     try {
-
-        connectDb();
-
-        // WAIT FOR THE SERVER TO START
+        if(req.method === "OPTIONS") {
+            res.end();
+            return false;
+        }
+    
+        // START SERVER
         await startServer;
-        // TELL NEXT.JS WHAT THE PATH IS
-        await server.getMiddleware({
-            path: "/api/graphql",
-        })(req, res);    
-
+    
+        // CREATE HANDLER
+        await server.createHandler({path: '/api/graphql'})(req, res);     
     } catch (error) {
-        console.log("Error starting GraphQL server: ", error);
+        console.log("BIG PROBLEM");
+        
     }
+   
+
+
 });
 
 
 
-// CONFIG FOR LETTING DATA THROUGH BODY
-export const config = {
-    api: {
-        bodyParser: false,
-        externalResolver: false,
-    },
-}
+
 
 
 

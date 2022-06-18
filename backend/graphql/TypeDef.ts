@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-express";
+import { gql } from "apollo-server-micro";
 
 // TYPE DEFS
 const typeDefs = gql`
