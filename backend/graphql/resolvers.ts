@@ -1,8 +1,19 @@
+import Post from "../mongodb/models/Post";
+
+
 const resolvers = {
     Query: {
-        // SAY HI QUERY
-        sayHi: () => { 
-            return "Hello World :)";
+        // GET ALL POSTS
+        getPosts: async () => {
+            // USE POST MODEL TO FETCH POSTS
+            try {
+                // FETCHES ALL POSTS
+                let posts = await Post.find();
+                return posts;
+            } catch (error) {
+                console.log("Error fetching all posts: ", error);
+                throw new Error(error!.toString());
+            }
         }
     }
 }
