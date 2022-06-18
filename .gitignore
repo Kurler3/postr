@@ -19,7 +19,6 @@
 /.history/*
 
 .env
-next.config.js
 
 # misc
 .DS_Store
