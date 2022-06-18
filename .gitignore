@@ -18,6 +18,8 @@
 # HISTORY
 /.history/*
 
+.env
+
 # misc
 .DS_Store
 *.pem
