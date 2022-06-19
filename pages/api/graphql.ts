@@ -1,15 +1,26 @@
+// APOLLO SERVER
 import { ApolloServer } from 'apollo-server-micro'
+
+// GRAPHQL PLAYGROUND PLUGIN
 import {ApolloServerPluginLandingPageGraphQLPlayground} from 'apollo-server-core';
+
+// REQUEST AND RESPONSE FROM NEXT
 import { NextApiRequest, NextApiResponse } from 'next';
-import resolvers from '../../backend/graphql/resolvers';
+
+// RESOLVERS
+import resolvers from '../../backend/graphql/resolvers/index';
+// TYPE DEFINITIONS
 import typeDefs from '../../backend/graphql/TypeDef';
+
+// CROSS ORIGIN 
 import Cors from 'micro-cors';
+
+// CONNECT DB FUNCTION
 import connectDb from '../../backend/mongodb/mongoose';
 
 
 // NOT INSIDE THE HANDLER FUNCTION BECAUSE ONLY NEED TO CONNECT TO MONGODB ONCE!
 connectDb();
-
 
 // CONFIG FOR LETTING DATA THROUGH BODY
 export const config = {
@@ -51,10 +62,8 @@ export default cors(async(req: NextApiRequest, res: NextApiResponse) => {
         await server.createHandler({path: '/api/graphql'})(req, res);     
     } catch (error) {
         console.log("BIG PROBLEM");
-        
+        // throw new Error(error.toString());
     }
-   
-
 
 });
 

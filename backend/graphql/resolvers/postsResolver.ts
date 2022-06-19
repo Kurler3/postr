@@ -1,7 +1,6 @@
-import Post from "../mongodb/models/Post";
+import Post from "../../mongodb/models/Post";
 
-
-const resolvers = {
+export default {
     Query: {
         // GET ALL POSTS
         getPosts: async () => {
@@ -16,6 +15,4 @@ const resolvers = {
             }
         }
     }
-}
-
-export default resolvers;
+};
