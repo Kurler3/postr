@@ -7,4 +7,7 @@ export default {
     },
 
     // MUTATIONS
+    Mutation: {
+        
+    }
 };

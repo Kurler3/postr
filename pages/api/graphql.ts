@@ -22,7 +22,7 @@ import connectDb from '../../backend/mongodb/mongoose';
 // NOT INSIDE THE HANDLER FUNCTION BECAUSE ONLY NEED TO CONNECT TO MONGODB ONCE!
 connectDb();
 
-// CONFIG FOR LETTING DATA THROUGH BODY
+// CONFIG FOR NOT LETTING DATA THROUGH BODY :)
 export const config = {
     api: {
         bodyParser: false,
