@@ -6,3 +6,11 @@ export interface RegisterInput {
     confirmPassword: string;
     email: string;
 }
+
+export interface UserType {
+    id: string;
+    username: string;
+    email: string;
+    createdAt: string;
+    token: string;
+}

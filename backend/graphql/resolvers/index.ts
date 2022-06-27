@@ -1,4 +1,5 @@
 import  postsResolvers  from './postsResolver';
+import usersResolver from './usersResolver';
 
 export default {
     // QUERIES
@@ -8,6 +9,6 @@ export default {
 
     // MUTATIONS
     Mutation: {
-        
+        ...usersResolver.Mutation,
     }
 };
