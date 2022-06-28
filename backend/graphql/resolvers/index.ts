@@ -10,5 +10,6 @@ export default {
     // MUTATIONS
     Mutation: {
         ...usersResolver.Mutation,
+        ...postsResolvers.Mutation,
     }
 };

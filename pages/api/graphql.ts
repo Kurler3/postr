@@ -37,6 +37,8 @@ const cors = Cors();
 const server = new ApolloServer({
     typeDefs,
     resolvers,
+    // MAKES IT SO THAT WE CAN GET THE REQUEST BODY IN THE CONTEXT IN THE RESOLVERS
+    context: ({req}) => ({req}),
     introspection: true,
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
 });

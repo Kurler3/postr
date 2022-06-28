@@ -22,7 +22,7 @@ const generateToken = (user: UserType) => {
 export default {
     Mutation: {
         // REGISTER USER MUTATION
-        register: async (_, args: {registerInput: RegisterInput}, context, info) => {
+        register: async (_, args: {registerInput: RegisterInput}, ) => {
             // DESTRUCTURE
             let {username, password, confirmPassword, email} = args.registerInput;
 
