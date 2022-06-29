@@ -14,3 +14,9 @@ export interface UserType {
     createdAt: string;
     token: string;
 }
+
+export interface UserJWT {
+    id: string;
+    email: string;
+    username: string;
+}

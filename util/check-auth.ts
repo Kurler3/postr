@@ -1,11 +1,12 @@
 import jwt from 'jsonwebtoken';
 import { NextApiRequest } from 'next';
 import { AuthenticationError } from 'apollo-server-micro';
+import {UserJWT} from '../types/userTypes';
 
-export default (context: {req:NextApiRequest}) => {
+export default (context: {req:NextApiRequest}): UserJWT | undefined => {
     let authHeader = context.req.headers.authorization;
 
-    // IF WE AUTH HEADERS DEFINED
+    // IF AUTH HEADERS DEFINED
     if(authHeader) {
         // WILL HAVE FORMAT OF "Bearer ......"
         let token = authHeader.split("Bearer ")[1];
@@ -16,7 +17,7 @@ export default (context: {req:NextApiRequest}) => {
                 // VERIFY IF THE TOKEN IS OK
                 let user = jwt.verify(token, process.env.JWT_SECRET_KEY!);
 
-                return user;
+                return user as UserJWT;
             } catch (error) {
                 console.log("User not authenticated");
 
@@ -30,6 +31,6 @@ export default (context: {req:NextApiRequest}) => {
     } 
     // NO AUTH HEADER
     else {
-        throw new Error('Authentication header must be provided');
+        throw new Error('Authorization header must be provided');
     }
 }

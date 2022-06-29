@@ -1,6 +1,8 @@
 import { NextApiRequest } from "next";
 import Post from "../../mongodb/models/Post";
 import checkAuth from "../../../util/check-auth";
+import { UserJWT } from "../../../types/userTypes";
+import { AuthenticationError } from "apollo-server-micro";
 
 export default {
     // QUERIES
@@ -10,7 +12,7 @@ export default {
             // USE POST MODEL TO FETCH POSTS
             try {
                 // FETCHES ALL POSTS
-                let posts = await Post.find();
+                let posts = await Post.find().sort({createdAt: -1});
                 return posts;
             } catch (error) {
                 console.log("Error fetching all posts: ", error);
@@ -50,13 +52,69 @@ export default {
             // MAKE SURE THE USER IS AUTHENTICATED BEFORE CREATING A POST (USING JWT)
             let authenticatedUser = checkAuth(context);
 
-            
+            // IF AUTHENTICATED, THEN RESUME CREATION OF POST, OTHERWISE
+            // checkAuth FUNCTION WILL THROW ERROR
+            if(authenticatedUser) {
 
+                try {
+                    
+                    // CREATE POST
+                    let newPost = new Post({
+                        body: args.body,
+                        user: authenticatedUser.id,
+                        createdAt: new Date().toISOString(),
+                        username: authenticatedUser.username,
+                        comments: [],
+                        liked: [],
+                    });
+                    
+                    // SAVE IT
+                    let savedPost = await newPost.save();
+
+                    return savedPost;
+                    
+                } catch (error) {
+                    throw new Error(`Creation of post failed :( because of ${error}`);
+                }
+            }
+            else {
+                console.log("User not authenticated :/");
+            }
         },
 
         // DELETE POST
-        deletePost: async (_, args: {postId: string|number}) => {
-            
+        deletePost: async (_, args: {postId: string|number}, context: {req:NextApiRequest}) => {
+            let authenticatedUser = checkAuth(context);
+
+            // IF AUTHENTICATED
+            if(authenticatedUser) {
+
+                try {
+
+                    // FIND POST IN DB
+                    let post = await Post.findById(args.postId);
+
+                    // IF NOT, THEN THROW ERROR
+                    // IF IT IS, THEN DELETE FROM DB
+                    // CHECK IF POST USERNAME is THIS USERS USERNAME
+                    if(post.username===authenticatedUser.username) {
+                        // DELETE
+                        await post.delete();
+
+                        return "Post deleted successfully";
+                    }
+                    else {
+                        throw new AuthenticationError("Not allowed to delete posts that aren't yours");
+                    }
+                    
+                } catch (error) {
+                    throw new Error(`Error deleting post because: ${error}`);
+                }
+            }
+            else {
+                console.log('Need auth to delete post :)');
+            }
+
         }
     }
 };

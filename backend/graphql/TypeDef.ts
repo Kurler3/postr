@@ -3,12 +3,27 @@ import { gql } from "apollo-server-micro";
 // TYPE DEFS
 const typeDefs = gql`
 
+    # COMMENT TYPE
+    type Comment {
+        body: String!
+        username: String!
+        createdAt: String!
+    }
+
+    # LIKE TYPE
+    type Like {
+        username: String!
+        createdAt: String!
+    }
+
     # POST TYPE
     type Post {
         id: ID!
         body: String!
         createdAt: String!
         username: String!
+        comments: [Comment]!
+        likes: [Like]!
     }
 
     # USER TYPE
