@@ -5,6 +5,7 @@ const typeDefs = gql`
 
     # COMMENT TYPE
     type Comment {
+        id: ID!
         body: String!
         username: String!
         createdAt: String!
@@ -12,6 +13,7 @@ const typeDefs = gql`
 
     # LIKE TYPE
     type Like {
+        id: ID!
         username: String!
         createdAt: String!
     }
@@ -51,10 +53,17 @@ const typeDefs = gql`
 
     # MUTATIONS
     type Mutation {
+        # USER
         register(registerInput: RegisterInput): User!
         login(username: String!, password: String!): User!
+        # POST
         createPost(body:String!):Post!
         deletePost(postId: ID!): String!
+        # COMMENT
+        createComment(postId: ID!, body: String!): Post!
+        deleteComment(postId: ID!, commentId: ID!): Post!
+        # LIKE
+        likePost(postId: ID!): Post!
     }
 `;
 

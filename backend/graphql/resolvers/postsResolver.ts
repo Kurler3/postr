@@ -1,7 +1,6 @@
 import { NextApiRequest } from "next";
 import Post from "../../mongodb/models/Post";
 import checkAuth from "../../../util/check-auth";
-import { UserJWT } from "../../../types/userTypes";
 import { AuthenticationError } from "apollo-server-micro";
 
 export default {
@@ -21,7 +20,7 @@ export default {
         },
 
         // GET SPECIFIC POST
-        getPost: async (_, args: {postId: string|number}) => {
+        getPost: async (_:null, args: {postId: string|number}) => {
             try {
                 // DESTRUCTURE POST ID FROM ARGUMENT
                 let {postId} = args; 
@@ -38,7 +37,7 @@ export default {
                 }
             } catch (error) {
                 console.log("Error fetching single post");
-                throw new Error(error);
+                throw new Error(error!.toString());
             }
         }
     },
@@ -47,7 +46,7 @@ export default {
     Mutation: {
 
         // CREATE POST
-        createPost: async (_, args: {body: string}, context: {req:NextApiRequest}) => {
+        createPost: async (_:null, args: {body: string}, context: {req:NextApiRequest}) => {
             
             // MAKE SURE THE USER IS AUTHENTICATED BEFORE CREATING A POST (USING JWT)
             let authenticatedUser = checkAuth(context);
@@ -83,7 +82,7 @@ export default {
         },
 
         // DELETE POST
-        deletePost: async (_, args: {postId: string|number}, context: {req:NextApiRequest}) => {
+        deletePost: async (_:null, args: {postId: string|number}, context: {req:NextApiRequest}) => {
             let authenticatedUser = checkAuth(context);
 
             // IF AUTHENTICATED

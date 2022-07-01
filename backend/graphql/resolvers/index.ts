@@ -1,3 +1,4 @@
+import commentsResolver from './commentsResolver';
 import  postsResolvers  from './postsResolver';
 import usersResolver from './usersResolver';
 
@@ -11,5 +12,6 @@ export default {
     Mutation: {
         ...usersResolver.Mutation,
         ...postsResolvers.Mutation,
+        ...commentsResolver.Mutation,
     }
 };

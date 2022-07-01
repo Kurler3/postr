@@ -12,17 +12,23 @@ import { validateLoginInput, validateRegisterInput } from "../../../util/validat
 
 
 const generateToken = (user: UserType) => {
-    return jwt.sign({
+
+    let token = jwt.sign({
         id: user.id,
         email: user.email,
         username: user.username,
     }, process.env.JWT_SECRET_KEY!, {expiresIn: '1h'});
+
+    // STORE IN LOCAL STORAGE JWT TOKEN
+
+
+    return token;
 }
 
 export default {
     Mutation: {
         // REGISTER USER MUTATION
-        register: async (_, args: {registerInput: RegisterInput}, ) => {
+        register: async (_:null, args: {registerInput: RegisterInput}, ) => {
             // DESTRUCTURE
             let {username, password, confirmPassword, email} = args.registerInput;
 
@@ -78,7 +84,7 @@ export default {
 
         },
         // LOGIN USER MUTATION
-        login: async (_, args: {username: string, password: string}) => {
+        login: async (_:null, args: {username: string, password: string}) => {
             let {username, password} = args;
 
             // VALIDATION OF INPUT DATA
