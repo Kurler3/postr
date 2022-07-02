@@ -1,7 +1,8 @@
 import { NextApiRequest } from "next";
 import checkAuth from "../../../util/check-auth";
-import { UserInputError } from "apollo-server-micro";
+import { UserInputError, AuthenticationError } from "apollo-server-micro";
 import Post from "../../mongodb/models/Post";
+import { PostComment } from "../../../types/postTypes";
 
 
 export default {
@@ -56,6 +57,43 @@ export default {
         // DELETE COMMENT
         deleteComment: async (_:null, args: {postId: string|number, commentId: string|number},context: {req: NextApiRequest}) => { 
 
+            // CHECK AUTH
+            let authenticatedUser = checkAuth(context);
+
+            // IF AUTHENTICATED
+            if(authenticatedUser) {
+
+                // CHECK IF POST EXISTS
+                let post = await Post.findById(args.postId);
+
+                if(!post) {
+                    throw new UserInputError("Post not found");
+                }
+
+                // DELETE 
+                let commentIndex = post.comments.find((comment:PostComment) => comment.id === args.commentId);
+
+                if(commentIndex === -1) {
+                    throw new UserInputError("Comment not found");
+                }   
+                else if(post.comments[commentIndex].username !== authenticatedUser.username) {
+                    
+                    // DO NOT NEED TO SEND ERRORS OBJECT TO FRONT-END BECAUSE
+                    // THE USER WILL NEVER GET A DELETE BUTTON IF THE COMMENT IS NOT THEIRS.
+                    throw new AuthenticationError("Can't remove comments not made by you!");
+                }
+
+                // REMOVE FROM COMMENTS ARRAY
+                post.comments.splice(commentIndex, 1);
+
+                // UPDATE POST
+                await post.save();
+
+                // RETURN 
+                return post;
+            } else {    
+                console.log("User not authenticated :/");
+            }
 
 
         }

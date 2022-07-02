@@ -1,7 +1,8 @@
 import { NextApiRequest } from "next";
 import Post from "../../mongodb/models/Post";
 import checkAuth from "../../../util/check-auth";
-import { AuthenticationError } from "apollo-server-micro";
+import { AuthenticationError, UserInputError } from "apollo-server-micro";
+import { PostLike } from "../../../types/postTypes";
 
 export default {
     // QUERIES
@@ -114,6 +115,48 @@ export default {
                 console.log('Need auth to delete post :)');
             }
 
+        },
+
+        // LIKE POST
+        likePost: async (_:null, args: {postId: string|number}, context:{req:NextApiRequest}) => {
+
+            // CHECK AUTH
+            let authenticatedUser = checkAuth(context);
+
+            // IF AUTHENTICATED
+            if(authenticatedUser) {
+
+                // FIND POST
+                let post = await Post.findById(args.postId);
+
+                if(!post) {
+                    throw new UserInputError("Post not found :(");
+                }
+
+                // ADD TO POSTS LIKES
+                let likeIndex = post.likes.findIndex((like: PostLike) => like.username === authenticatedUser!.username);
+
+                // IF WAS LIKED, THEN REMOVE THE LIKE
+                if(likeIndex > -1) {
+                    post.likes.splice(likeIndex, 1);
+                }  
+                // WAS NOT LIKED, SO PUSH TO LIKES ARRAY
+                else {
+                    post.likes.push({
+                        username: authenticatedUser.username,
+                        createdAt: new Date().toISOString(),
+                    });
+                }
+
+                // UPDATE POST
+                await post.save();
+
+                // RETURN NEW POST
+                return post;
+                
+            } else {
+                console.log("User not authenticated :/");
+            }
         }
     }
 };
