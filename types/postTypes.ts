@@ -12,3 +12,15 @@ export interface PostLike {
     username: string;
     createdAt: string;
 }
+
+// POST
+export interface PostType {
+    id: string|number;
+    body: string;
+    createdAt: string;
+    username: string;
+    comments: [PostComment];
+    likes: [PostLike];
+    likesCount: number;
+    commentsCount: number;
+}

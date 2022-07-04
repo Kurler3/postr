@@ -26,6 +26,8 @@ const typeDefs = gql`
         username: String!
         comments: [Comment]!
         likes: [Like]!
+        likesCount: Int!
+        commentsCount: Int!
     }
 
     # USER TYPE

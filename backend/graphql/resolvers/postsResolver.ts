@@ -57,7 +57,12 @@ export default {
             if(authenticatedUser) {
 
                 try {
-                    
+
+                    // IF BODY IS AN EMPTY STRING
+                    if(args.body.trim() === "") {
+                        throw new UserInputError("Post body must not be empty");
+                    }
+
                     // CREATE POST
                     let newPost = new Post({
                         body: args.body,
