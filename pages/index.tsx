@@ -1,8 +1,13 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import Head from 'next/head';
+import { useEffect } from 'react';
 
-const Home: NextPage = () => {
+// THIS COMPONENT WILL ONLY BE DISPLAYED WHEN THE USER ACCESSES "/"
+const Home: NextPage = ({user}) => {
+  
+  console.log("USER: ", user);
+  
+
   return (
     <div className="min-h-screen">
       <Head>

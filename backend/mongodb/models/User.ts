@@ -1,4 +1,4 @@
-import { model, Schema} from 'mongoose';
+import mongoose, { model, Schema} from 'mongoose';
 
 // DEFINE USER SCHEMA
 
@@ -14,4 +14,6 @@ const userSchema = new Schema({
     createdAt: String,
 });
 
-export default model("User", userSchema);
+const modelToReturn = mongoose.models.User || model("User", userSchema);
+
+export default modelToReturn;

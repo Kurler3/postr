@@ -1,4 +1,4 @@
-import { model, Schema} from 'mongoose';
+import mongoose, { model, Schema} from 'mongoose';
 
 // DEFINE POST SCHEMA
 
@@ -30,4 +30,6 @@ const postSchema = new Schema({
     },
 });
 
-export default model("Post", postSchema);
+const modelToReturn = mongoose.models.Post || model("Post", postSchema);
+
+export default modelToReturn;
