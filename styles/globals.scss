@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Neucha&display=swap');
+
+$main-blue: #3492eb;
+
+* {
+    font-family: 'Fredoka', sans-serif;
+}
+
+.blueTxt {
+    color: $main-blue;
+}
+
+.commonSmallTransition {
+    transition: 0.3s all ease;
+}

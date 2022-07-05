@@ -1,4 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Neucha&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+* {
+  font-family: 'Fredoka', sans-serif;
+}
+
+.blueTxt {
+  color: #3492eb;
+}
+
+.commonSmallTransition {
+  -webkit-transition: 0.3s all ease;
+  transition: 0.3s all ease;
+}
 /*# sourceMappingURL=globals.css.map */
