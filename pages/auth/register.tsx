@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { memo } from 'react'
 
-const register = () => {
+const RegisterPage = () => {
   return (
     <div>register</div>
   )
 }
 
-export default register
+export default memo(RegisterPage);

@@ -1,4 +1,3 @@
-import { NextComponentType } from 'next';
 import { memo } from 'react';
 
 interface Props {
