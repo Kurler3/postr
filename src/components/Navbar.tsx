@@ -28,7 +28,7 @@ export default memo(function Navbar({
             <Link
                 href="/"
             >
-                <span className="text-[3rem] px-6 blueTxt cursor-pointer">
+                <span className="transition hover:scale-105 text-[3rem] px-6 text-[#66b5ff] hover:text-[#3492eb] cursor-pointer">
                     Postr
                 </span>
                 

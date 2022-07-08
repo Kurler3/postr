@@ -32,7 +32,7 @@ const Home: NextPage = () => {
         rel="stylesheet" />
       </Head> */}
 
-      <main className={`h-full bg-blue-50 w-full flex justify-center items-center ${loading ? "h-[70vh]" : ""}`}>
+      <main className={`h-full  w-full flex justify-center items-center ${loading ? "h-[70vh]" : ""}`}>
 
           {
             loading ? 

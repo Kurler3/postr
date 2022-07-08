@@ -5,14 +5,18 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Neucha&display=swap');
 
-$main-blue: #3492eb;
+::root {
+    --main-blue: #3492eb;
+    --lighter-blue: #66b5ff;
+}
+
 
 * {
     font-family: 'Fredoka', sans-serif;
 }
 
 .blueTxt {
-    color: $main-blue;
+    color: var(--main-blue);
 }
 
 .commonSmallTransition {
