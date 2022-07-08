@@ -2,14 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Neucha&display=swap');
 
-::root {
+:root {
     --main-blue: #3492eb;
     --lighter-blue: #66b5ff;
 }
-
 
 * {
     font-family: 'Fredoka', sans-serif;

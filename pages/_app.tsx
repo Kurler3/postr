@@ -1,5 +1,5 @@
 // STYLES
-import '../styles/css/globals.css'
+import '../styles/globals.css'
 // PROPS
 import type { AppProps } from 'next/app'
 // APOLLO
@@ -26,6 +26,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/favicon.ico" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
         rel="stylesheet" />
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Neucha&display=swap');
+        </style>
       </Head>
       {/* NAVBAR */}
       <Navbar />

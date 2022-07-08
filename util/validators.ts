@@ -27,10 +27,12 @@ export const validateRegisterInput = (
     // PASSWORD
     if(password === "") {
         errors.password = "Password must not be empty";
+        errors.confirmPassword = "Password must not be empty";
     }
     // IF NOT THE SAME AS THE CONFIRM PASSWORD
     else if(password!==confirmPassword) {
-        errors.password = "Passwords must match";
+        errors.password= "Passwords must match";
+        errors.confirmPassword = "Passwords must match";
     }
 
 

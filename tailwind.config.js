@@ -7,8 +7,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'main-blue': "var(--main-blue",
+        'main-blue': "var(--main-blue)",
         'lighter-blue': "var(--lighter-blue)",
+        'modal-black': 'rgba(0,0,0,0.4)',
       }
     },
   },
