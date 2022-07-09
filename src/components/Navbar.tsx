@@ -1,13 +1,23 @@
 import Link from 'next/link';
 import Router from 'next/router';
-import {memo, SyntheticEvent, useCallback} from 'react';
+import React, {memo, SyntheticEvent, useCallback} from 'react';
+import { getUserState } from '../../store/reducers/usersReducer';
+import { useSelector } from '../../store/store';
 import { LooseObject } from '../../types/validationTypes';
 import Button from './Customs/Button';
+import { useDispatch } from '../../store/store';
+import {logout as logoutAction} from '../../store/reducers/usersReducer'; 
 
 export default memo(function Navbar({
 
 }) {
 
+    // DISPATCH
+    const dispatch = useDispatch();
+
+    // GET USER STATE FROM REDUX
+    const user = useSelector(getUserState);
+    
 
     // HANDLE LOGIN CLICK
     const handleAuthBtnClick = useCallback((e:SyntheticEvent, isLoginClick:boolean) => {
@@ -16,10 +26,12 @@ export default memo(function Navbar({
         // REDIRECT TO /auth/login or /auth/register
         Router.push(`/auth/${isLoginClick ? "login" : "register"}`);
 
-
     }, []);
 
-    // HANDLE REGISTER CLICK
+    // HANDLE LOGOUT
+    const handleLogOut = useCallback((e:SyntheticEvent) => {
+        dispatch(logoutAction());
+    }, []);
 
     return (
         <div className='text-lg flex-row flex justify-between items-center min-w-screen p-7 sticky shadow-lg'>
@@ -37,26 +49,44 @@ export default memo(function Navbar({
             {/* LOGIN/REGISTER BTNS */}
             <div className="flex flex-row">
                 
-                {/* LOGIN */}
+                {
+                    !user.id ?
+                    <React.Fragment>
+                        {/* LOGIN */}
+                        <Button 
+                            onClick={(e:SyntheticEvent) => handleAuthBtnClick(e, true)}
+                            txt="Login"
+                            icon="login"
+                            btnCss='w-32 mx-5 rounded-md shadow-xl border-gray border-2 border-solid border-[#3492eb] py-2 relative hover:bg-[#3492eb] commonSmallTransition hover:text-white'
+                            iconCss='mr-2'
+                            txtCss='font-medium'
+                        />
+                        
+                        {/* REGISTER */}
+                        
+                        <Button 
+                            onClick={(e:SyntheticEvent) => handleAuthBtnClick(e, false)}
+                            txt="Register"
+                            icon="how_to_reg"
+                            btnCss='w-32 mx-5 rounded-md shadow-xl border-2 border-solid hover:border-[#3492eb] py-2 relative bg-[#3492eb]  hover:bg-white commonSmallTransition text-white hover:text-black'
+                            iconCss='mr-2'
+                            txtCss='font-medium'
+                        />
+                    </React.Fragment>
+                
+                :
+
                 <Button 
-                    onClick={(e:SyntheticEvent) => handleAuthBtnClick(e, true)}
-                    txt="Login"
-                    icon="login"
+                    onClick={(e:SyntheticEvent) => handleLogOut(e)}
+                    txt="Logout"
+                    icon="logout"
                     btnCss='w-32 mx-5 rounded-md shadow-xl border-gray border-2 border-solid border-[#3492eb] py-2 relative hover:bg-[#3492eb] commonSmallTransition hover:text-white'
                     iconCss='mr-2'
                     txtCss='font-medium'
                 />
+            }
+
                 
-                {/* REGISTER */}
-                
-                <Button 
-                    onClick={(e:SyntheticEvent) => handleAuthBtnClick(e, false)}
-                    txt="Register"
-                    icon="how_to_reg"
-                    btnCss='w-32 mx-5 rounded-md shadow-xl border-2 border-solid hover:border-[#3492eb] py-2 relative bg-[#3492eb]  hover:bg-white commonSmallTransition text-white hover:text-black'
-                    iconCss='mr-2'
-                    txtCss='font-medium'
-                />
 
             </div>
 

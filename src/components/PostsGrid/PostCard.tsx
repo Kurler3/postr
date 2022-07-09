@@ -20,12 +20,12 @@ const PostCard:React.FC<Props> = ({
 
     // HANDLES CLICK LIKE
     const handleLikeBtnClick = useCallback((e:SyntheticEvent) => {
-        console.log("Clicked like :)");
+        
     }, []);
 
     // HANDLE COMMENT CLICK
     const handleCommentBtnClick = useCallback((e:SyntheticEvent) => {
-        console.log("Comments clicked :)");
+       
         
     } ,[]);
 

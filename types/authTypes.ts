@@ -7,7 +7,6 @@ export interface RegisterState {
 
 export interface LoginState {
   username: string;
-  email: string;
   password: string;
 }
   
