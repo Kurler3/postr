@@ -7,7 +7,7 @@ import { ApolloProvider } from '@apollo/client';
 import client from '../src/components/ApolloClient';
 
 // NAVBAR
-import Navbar from '../src/components/Navbar';
+import Navbar from '../src/components/Navbar/Navbar';
 
 // HEAD
 import Head from 'next/head';
@@ -20,6 +20,7 @@ import {Provider} from 'react-redux';
 
 // IMPORT STORE
 import {store} from '../store/store';
+import { useEffect } from 'react';
 
 // THIS COMPONENT CONTAINS THE ENTIRE APP (THIS IS THE APP ROOT)
 // ANY CODE WRITEN INSIDE THE RETURN WILL BE DISPLAYED IN EVERY SINGLE PAGE.

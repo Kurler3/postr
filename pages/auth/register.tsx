@@ -87,52 +87,23 @@ const RegisterPage = () => {
     }
   });
 
-
-  // WORK AROUND FOR addUser function 
-  function registerUser () {
-    addUser();
-  }
-
-
-
   //////////////////////////
   // FUNCTIONS //////////////
   //////////////////////////
 
-  // // HANDLE INPUT CHANGE
-  // const handleInputChange = useCallback((e:React.ChangeEvent<HTMLInputElement>) => {
 
-  //   let key = e.target.name;
-  //   let value = e.target.value;
+  // WORK AROUND FOR addUser function 
+  async function registerUser () {
+    await addUser();
+  }
 
-  //   // IF STATE KEY DIFFERENT THAN THE NEW INPUT, THEN CHANGE
-  //   if(state[key as keyof typeof RegisterPage] !== value) {
-  //     setState((prevState) => {
-  //       return {
-  //         ...prevState,
-  //         [key]: value,
-  //       }
-  //     });
 
-  //     setErrors((prevState) => {
-  //       return {
-  //         ...prevState,
-  //         [key]: "",
-  //       }
-  //     });
-  //   }
+  //////////////////////////
+  // RENDER //////////////
+  //////////////////////////
 
-  // }, []);
 
-  // // HANDLE SUBMIT
-  // const handleSubmit = useCallback(async () => {
-  //   // CALL ADD USER MUTATION FUNCTION
-  //   await addUser();
-
-  //   // IF REGISTERED SUCCESSFULLY, THEN REDIRECT TO HOME PAGE "/"
-  //   Router.push('/');
-  // }, []);
-
+ 
 
   return (  
     <div className='m-auto w-[40%] flex flex-col justify-start align-middle mt-8 relative transition'

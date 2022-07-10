@@ -85,8 +85,8 @@ const LoginPage = () => {
   //////////////////////////
 
   // WORK AROUND FOR LOGIN USER IN THE useForm
-  function login() {
-    loginUser();
+  async function login()  {
+    await loginUser();
   }
 
 

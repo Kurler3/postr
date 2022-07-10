@@ -11,3 +11,6 @@ export const USER_AVATAR_URLS = [
     // YOSHI
     'https://avatars.steamstatic.com/a69317c1a7b2ddfe375d3bbbbbcb694558787fa8_full.jpg',
 ];
+
+// USER TOKEN 
+export const USER_TOKEN = "USER_TOKEN";

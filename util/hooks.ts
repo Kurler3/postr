@@ -1,6 +1,8 @@
 import Router from 'next/router';
 import {SyntheticEvent, useCallback, useState} from 'react';
 
+
+// USE FORM CUSTOM HOOK
 export const useForm = (callback:Function, initialState = {}) => {
 
     const [values, setValues] = useState(initialState);
@@ -11,14 +13,12 @@ export const useForm = (callback:Function, initialState = {}) => {
     }, []);
 
     // ON SUBMIT
-    const onSubmit = useCallback(async (e:SyntheticEvent) => {
+    const onSubmit = useCallback((e:SyntheticEvent) => {
         e.preventDefault();
 
         // CALLBACK (addUser, loginUser)
-        await callback();
+        callback();
 
-        // PUSH TO '/' IF SUCCESS
-        Router.push('/');
     } ,[]);
 
     return {

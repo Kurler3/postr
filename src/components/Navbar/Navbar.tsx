@@ -1,12 +1,16 @@
 import Link from 'next/link';
 import Router from 'next/router';
-import React, {memo, SyntheticEvent, useCallback} from 'react';
-import { getUserState } from '../../store/reducers/usersReducer';
-import { useSelector } from '../../store/store';
-import { LooseObject } from '../../types/validationTypes';
-import Button from './Customs/Button';
-import { useDispatch } from '../../store/store';
-import {logout as logoutAction} from '../../store/reducers/usersReducer'; 
+import React, {memo, SyntheticEvent, useCallback, useEffect} from 'react';
+import { getUserState, UserState } from '../../../store/reducers/usersReducer';
+import { useSelector } from '../../../store/store';
+import Button from '../Customs/Button';
+import { useDispatch } from '../../../store/store';
+import {logout as logoutAction} from '../../../store/reducers/usersReducer'; 
+import { USER_TOKEN } from '../../../util/constants';
+
+import jwt from 'jsonwebtoken';
+
+import {login as loginUser} from '../../../store/reducers/usersReducer';
 
 export default memo(function Navbar({
 
@@ -33,6 +37,19 @@ export default memo(function Navbar({
         dispatch(logoutAction());
     }, []);
 
+
+    // AUTH SIGN IN IF TOKEN
+    useEffect(() => {
+        let token = localStorage.getItem(USER_TOKEN);
+
+        // IF THERE'S A TOKEN AND THE USER IS NOT LOGGED IN, THEN LOG HIM IN
+        if(token && token.length > 0  && !user.id) {
+            let userData = jwt.decode(token);
+            dispatch(loginUser({...userData as Object, token} as UserState));
+        }
+
+    }, []);
+
     return (
         <div className='text-lg flex-row flex justify-between items-center min-w-screen p-7 sticky shadow-lg'>
             
@@ -47,7 +64,7 @@ export default memo(function Navbar({
             </Link>
 
             {/* LOGIN/REGISTER BTNS */}
-            <div className="flex flex-row">
+            <div className="flex flex-row items-center">
                 
                 {
                     !user.id ?
@@ -75,15 +92,24 @@ export default memo(function Navbar({
                     </React.Fragment>
                 
                 :
-
-                <Button 
-                    onClick={(e:SyntheticEvent) => handleLogOut(e)}
-                    txt="Logout"
-                    icon="logout"
-                    btnCss='w-32 mx-5 rounded-md shadow-xl border-gray border-2 border-solid border-[#3492eb] py-2 relative hover:bg-[#3492eb] commonSmallTransition hover:text-white'
-                    iconCss='mr-2'
-                    txtCss='font-medium'
-                />
+                <React.Fragment>
+                    
+                    {/* GREETING MSG*/}
+                    <span className='text-2xl h-full mr-5'>
+                        Hi, <b>{user.username}</b>!
+                    </span>
+                    
+                    {/* LOGOUT BTN */}
+                    <Button 
+                        onClick={(e:SyntheticEvent) => handleLogOut(e)}
+                        txt="Logout"
+                        icon="logout"
+                        btnCss='w-32 mx-5 rounded-md shadow-xl border-gray border-2 border-solid border-[#3492eb] py-2 relative hover:bg-[#3492eb] commonSmallTransition hover:text-white'
+                        iconCss='mr-2'
+                        txtCss='font-medium'
+                    />
+                </React.Fragment>
+                
             }
 
                 

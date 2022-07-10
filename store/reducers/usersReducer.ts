@@ -1,4 +1,5 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
+import { USER_TOKEN } from "../../util/constants";
 
 
 export interface UserState {
@@ -30,6 +31,9 @@ export const userReducer = createSlice({
             state: Draft<typeof initialState>,
             action: PayloadAction<typeof initialState>
         ) => {
+            
+            // SET TOKEN
+            localStorage.setItem(USER_TOKEN, action.payload.token!);
             
             return {...action.payload};
         },

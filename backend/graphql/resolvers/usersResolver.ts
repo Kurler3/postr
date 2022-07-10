@@ -17,6 +17,7 @@ const generateToken = (user: UserType) => {
         id: user.id,
         email: user.email,
         username: user.username,
+        createdAt: user.createdAt,
     }, process.env.JWT_SECRET_KEY!, {expiresIn: '1h'});
 
     // STORE IN LOCAL STORAGE JWT TOKEN
@@ -73,7 +74,7 @@ export default {
             // THIRD ARGUMENT IS THE OPTIONS OBJECT, WHICH WE USE FOR SETTING THE EXPIRATION TIME
             let token = generateToken(res._doc);
 
-            // NEED TO MAYBE STORE JWT TOKEN IN LOCAL STORAGE
+            // NEED TO SET THE AUTH HEADERS HERE
 
             // SPREAD THE USER DATA + ID + TOKEN
             return {
@@ -116,7 +117,7 @@ export default {
             // CREATE NEW JWT TOKEN
             let token = generateToken(user);
 
-            // SET IN LOCAL STORAGE
+            // NEED TO SET THE AUTH HEADERS HERE
 
             // RETURN USER
             // SPREAD THE USER DATA + ID + TOKEN
