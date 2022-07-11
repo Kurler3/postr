@@ -61,8 +61,6 @@ const Home: NextPage = () => {
                 />
               }
               
-
-
               {/* POSTS GRID */}
               <PostsGrid 
                 posts={data.getPosts}

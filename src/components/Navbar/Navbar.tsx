@@ -74,7 +74,7 @@ export default memo(function Navbar({
                             onClick={(e:SyntheticEvent) => handleAuthBtnClick(e, true)}
                             txt="Login"
                             icon="login"
-                            btnCss='w-32 mx-5 rounded-md shadow-xl border-gray border-2 border-solid border-[#3492eb] py-2 relative hover:bg-[#3492eb] commonSmallTransition hover:text-white'
+                            btnCss='w-32 mx-5 rounded-md shadow-xl border-gray border-2 border-solid border-[color:var(--main-blue)] py-2 relative hover:bg-[color:var(--main-blue)] commonSmallTransition hover:text-white'
                             iconCss='mr-2'
                             txtCss='font-medium'
                         />
@@ -85,7 +85,7 @@ export default memo(function Navbar({
                             onClick={(e:SyntheticEvent) => handleAuthBtnClick(e, false)}
                             txt="Register"
                             icon="how_to_reg"
-                            btnCss='w-32 mx-5 rounded-md shadow-xl border-2 border-solid hover:border-[#3492eb] py-2 relative bg-[#3492eb]  hover:bg-white commonSmallTransition text-white hover:text-black'
+                            btnCss='w-32 mx-5 rounded-md shadow-xl border-2 border-solid hover:border-[color:var(--main-blue)] py-2 relative bg-[color:var(--main-blue)]  hover:bg-white commonSmallTransition text-white hover:text-black'
                             iconCss='mr-2'
                             txtCss='font-medium'
                         />
@@ -104,7 +104,7 @@ export default memo(function Navbar({
                         onClick={(e:SyntheticEvent) => handleLogOut(e)}
                         txt="Logout"
                         icon="logout"
-                        btnCss='w-32 mx-5 rounded-md shadow-xl border-gray border-2 border-solid border-[#3492eb] py-2 relative hover:bg-[#3492eb] commonSmallTransition hover:text-white'
+                        btnCss='w-32 mx-5 rounded-md shadow-xl border-gray border-2 border-solid border-[color:var(--main-blue)] py-2 relative hover:bg-[color:var(--main-blue)] commonSmallTransition hover:text-white'
                         iconCss='mr-2'
                         txtCss='font-medium'
                     />
