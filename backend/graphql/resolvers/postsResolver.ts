@@ -106,7 +106,7 @@ export default {
                         // DELETE
                         await post.delete();
 
-                        return "Post deleted successfully";
+                        return post._id;
                     }
                     else {
                         throw new AuthenticationError("Not allowed to delete posts that aren't yours");

@@ -70,3 +70,12 @@ export const CREATE_POST = gql`
         }
     } 
 `
+
+// DELETE POST MUTATION
+export const DELETE_POST = gql`
+    mutation deletePost(
+        $postId: ID!
+    ) {
+        deletePost(postId: $postId)
+    }
+`

@@ -16,6 +16,8 @@ export const useForm = (callback:Function, initialState = {}) => {
     const onSubmit = useCallback((e:SyntheticEvent) => {
         e.preventDefault();
 
+        // CLEAN STATE
+        setValues(initialState);
         // CALLBACK (addUser, loginUser)
         callback();
 

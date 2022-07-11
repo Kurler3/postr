@@ -5,6 +5,12 @@ import { USER_AVATAR_URLS } from '../../../util/constants';
 import { GET_RANDOM_ITEM } from '../../../util/functions';
 import Link from 'next/link';
 import Button from '../Customs/Button';
+import { useSelector } from '../../../store/store';
+import { getUserState } from '../../../store/reducers/usersReducer';
+import { useMutation } from '@apollo/client';
+import { DELETE_POST } from '../../../graphql/mutations';
+import {useDispatch} from '../../../store/store';
+
 
 interface Props {
     post: PostType;
@@ -13,6 +19,24 @@ interface Props {
 const PostCard:React.FC<Props> = ({
     post,
 }) => {
+
+    // DISPATCH
+    const dispatch = useDispatch();
+
+    // GET USER FROM REDUCER STORE
+    const user = useSelector(getUserState);
+
+    // DELETE MUTATION
+    const [deletePost, {loading}] = useMutation(DELETE_POST, {
+        update(proxy, result) {
+            
+            // DISPATCH DELETE POST ACTION 
+            
+        },
+        onError(err) {
+            console.log("Something wrong happened :(");
+        }
+    });
 
     /////////////////////////////////////
     /// FUNCTIONS ///////////////////////
@@ -25,13 +49,31 @@ const PostCard:React.FC<Props> = ({
 
     // HANDLE COMMENT CLICK
     const handleCommentBtnClick = useCallback((e:SyntheticEvent) => {
+        
        
         
     } ,[]);
 
 
+    // HANDLE DELETE CLICK
+    const handleDeleteBtnClicked = useCallback((e: SyntheticEvent) => {
+
+        // SET DISPLAY MODAL TO TRUE :)
+
+        // CALL BACK-END MUTATION   
+
+        // DISPATCH ACTION!
+
+    }, []);
+
+    // CONFIRM DELETE FUNC
+    const confirmDelete = useCallback(async () => {
+        // CALL DELETE POST FUNC
+        deletePost();
+    }, []);
+
     return (
-        <div className="rounded-lg shadow-lg border bg-gray-100 border-gray-500 md:w-40 lg:w-60 w-60 h-48 m-auto my-4 relative flex flex-col">
+        <div className="rounded-lg shadow-lg border bg-gray-100 border-gray-500 md:w-40 lg:w-60 w-60 h-48 m-auto my-4 relative flex flex-col opacityInAnimation">
             
             {/* AVATAR */}
             <img 
@@ -100,6 +142,16 @@ const PostCard:React.FC<Props> = ({
 
 
                 {/* DELETE (IF OWNER) */}
+                {
+                    user.id && post.username === user.username ?
+
+                    <Button 
+                        onClick={handleDeleteBtnClicked}
+                        icon="delete"
+                        btnCss="py-1 px-2 bg-red-600 group border ml-2 transition rounded-lg hover:bg-white hover:border-red-600 hover:shadow-lg hover:scale-[1.1]"  
+                        iconCss="text-[20px] text-white group-hover:text-red-600"
+                    />
+                :null}
 
             </div>
 

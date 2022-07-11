@@ -12,13 +12,20 @@ import {configureStore} from '@reduxjs/toolkit';
 
 // GET USER REDUCER
 import usersReducer from "./reducers/usersReducer";
+import postsReducer from './reducers/postsReducer';
 
 
 // creating store
 export const store = configureStore({
   reducer: {
     // WHERE ALL REDUCERS GO
+    
+    // USER
     user: usersReducer,
+    
+    // POSTS
+    posts: postsReducer,
+
   },
 });
 

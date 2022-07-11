@@ -60,7 +60,7 @@ const typeDefs = gql`
         login(username: String!, password: String!): User!
         # POST
         createPost(body:String!):Post!
-        deletePost(postId: ID!): String!
+        deletePost(postId: ID!): ID!
         # COMMENT
         createComment(postId: ID!, body: String!): Post!
         deleteComment(postId: ID!, commentId: ID!): Post!

@@ -3,7 +3,7 @@ import { PostType } from '../../../types/postTypes';
 import PostCard from './PostCard';
 
 interface Props {
-    posts: [PostType];
+    posts: PostType[];
 }
 
 

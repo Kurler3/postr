@@ -3,7 +3,7 @@ import { PostType } from "../../types/postTypes";
 // import _ from 'lodash';
 
 // INITIAL STATE
-const initialState:[] = [];
+const initialState:PostType[] = [];
 
 // CREATE SLICE
 export const postsReducer = createSlice({
@@ -25,16 +25,36 @@ export const postsReducer = createSlice({
         },
 
         // ADD POST
-        addPosts: (
+        addPost: (
             state: Draft<typeof initialState>,
-            action: PayloadAction<typeof initialState>,
+            action: PayloadAction<PostType>,
         ) => {
 
-            // let newState = _.cloneDeep(state);
+            let newState = state ?? [];
 
-            // return newState;
-        }
-
+            // ADD TO TOP
+            return [
+                action.payload,
+                ...newState,
+            ];
+        },
         // DELETE POST
+        deletePost: (
+            state: Draft<typeof initialState>,
+            action: PayloadAction<string>,
+        ) => {
+
+            // FILTER POST WITH GIVEN ID
+            return (state! as PostType[]).filter((post: PostType) => post.id !== action.payload);
+        }
     }
-})
+});
+
+// HELPER FOR USE SELECTOR.
+export const getPostsState = (state: {posts: PostType[]}) => state.posts;
+
+// EXPORT ALL ACTIONS
+export const {setPosts, addPost, deletePost} = postsReducer.actions;
+
+// EXPORT REDUCER
+export default postsReducer.reducer;
