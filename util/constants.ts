@@ -14,3 +14,9 @@ export const USER_AVATAR_URLS = [
 
 // USER TOKEN 
 export const USER_TOKEN = "USER_TOKEN";
+
+
+// TYPES OF MODALS 
+export enum MODAL_TYPES {
+    confirmDelete,
+}

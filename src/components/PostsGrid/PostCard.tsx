@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {memo, SyntheticEvent, useCallback} from 'react';
+import {memo, SyntheticEvent, useCallback, useState} from 'react';
 import { PostType } from '../../../types/postTypes';
 import { USER_AVATAR_URLS } from '../../../util/constants';
 import { GET_RANDOM_ITEM } from '../../../util/functions';
@@ -10,6 +10,8 @@ import { getUserState } from '../../../store/reducers/usersReducer';
 import { useMutation } from '@apollo/client';
 import { DELETE_POST } from '../../../graphql/mutations';
 import {useDispatch} from '../../../store/store';
+import DeletePostModal from '../Modal/DeletePostModal';
+import {deletePost as deletePostAction} from '../../../store/reducers/postsReducer';
 
 
 interface Props {
@@ -19,6 +21,9 @@ interface Props {
 const PostCard:React.FC<Props> = ({
     post,
 }) => {
+
+    // STATE
+    const [showModal, setShowModal] = useState(false);
 
     // DISPATCH
     const dispatch = useDispatch();
@@ -31,10 +36,19 @@ const PostCard:React.FC<Props> = ({
         update(proxy, result) {
             
             // DISPATCH DELETE POST ACTION 
+            console.log("Result: ", result);
+            
+            // dispatch(deletePost(result.data.deletePost.id));
+            dispatch(deletePostAction(result.data.deletePost.id));
+
+            setShowModal(() => false);
             
         },
         onError(err) {
             console.log("Something wrong happened :(");
+        },
+        variables: {
+            postId: post.id
         }
     });
 
@@ -58,18 +72,21 @@ const PostCard:React.FC<Props> = ({
     // HANDLE DELETE CLICK
     const handleDeleteBtnClicked = useCallback((e: SyntheticEvent) => {
 
-        // SET DISPLAY MODAL TO TRUE :)
-
-        // CALL BACK-END MUTATION   
-
-        // DISPATCH ACTION!
+        // SET DISPLAY MODAL TO TRUE :)  (DISPATCH SET MODAL ACTION)
+        setShowModal(() => true);
 
     }, []);
 
     // CONFIRM DELETE FUNC
     const confirmDelete = useCallback(async () => {
         // CALL DELETE POST FUNC
-        deletePost();
+        console.log("Delete post: ", )
+        await deletePost();
+    }, []);
+    
+    // ON CANCEL CLICK
+    const onCancelClick = useCallback(() => {
+        setShowModal(() => false);
     }, []);
 
     return (
@@ -154,7 +171,19 @@ const PostCard:React.FC<Props> = ({
                 :null}
 
             </div>
+            
 
+
+            {/* CONFIRM DELETE MODAL */}
+            {
+                showModal === true ?
+                
+                <DeletePostModal 
+                    onCancelClick={onCancelClick}
+                    onConfirmClick={confirmDelete}
+                />
+
+            :null}
         </div>
     )
 };

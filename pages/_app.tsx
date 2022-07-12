@@ -19,7 +19,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import {Provider} from 'react-redux';
 
 // IMPORT STORE
-import {store} from '../store/store';
+import {store, useSelector} from '../store/store';
 
 
 // THIS COMPONENT CONTAINS THE ENTIRE APP (THIS IS THE APP ROOT)
@@ -42,7 +42,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Navbar />
 
         {/* COMPONENT */}
-        <Component {...pageProps} user={null}/>
+        <Component {...pageProps}/>
+
       </Provider>
     </ApolloProvider>
   )

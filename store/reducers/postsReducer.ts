@@ -41,7 +41,7 @@ export const postsReducer = createSlice({
         // DELETE POST
         deletePost: (
             state: Draft<typeof initialState>,
-            action: PayloadAction<string>,
+            action: PayloadAction<string|number>,
         ) => {
 
             // FILTER POST WITH GIVEN ID

@@ -14,7 +14,6 @@ import {configureStore} from '@reduxjs/toolkit';
 import usersReducer from "./reducers/usersReducer";
 import postsReducer from './reducers/postsReducer';
 
-
 // creating store
 export const store = configureStore({
   reducer: {
