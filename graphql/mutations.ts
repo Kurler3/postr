@@ -108,3 +108,31 @@ export const LIKE_POST = gql`
         }
     }
 `
+
+// CREATE COMMENT MUTATION
+export const CREATE_COMMENT = gql`
+    mutation createComment(
+        $postId: ID!
+        $body: String!
+    ) {
+        createComment(postId: $postId, body: $body) {
+            id
+            body
+            createdAt
+            username
+            comments {
+                id
+                body
+                username
+                createdAt
+            }
+            likes {
+                id
+                username
+                createdAt
+            }
+            likesCount
+            commentsCount   
+        }
+    }
+`

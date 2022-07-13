@@ -1,4 +1,10 @@
-import { memo, SyntheticEvent, useCallback, useMemo, useState } from "react";
+import React, {
+  memo,
+  SyntheticEvent,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 
 // ROUTER
 import { useRouter } from "next/router";
@@ -10,10 +16,28 @@ import { useSelector } from "../../store/store";
 import { getUserState } from "../../store/reducers/usersReducer";
 import Button from "../../src/components/Customs/Button";
 import { useMutation } from "@apollo/client";
-import { DELETE_POST, LIKE_POST } from "../../graphql/mutations";
+import {
+  CREATE_COMMENT,
+  DELETE_POST,
+  LIKE_POST,
+} from "../../graphql/mutations";
 import { useDispatch } from "../../store/store";
-import { likeUnlikePost as likeAction, deletePost as deletePostAction } from "../../store/reducers/postsReducer";
+import {
+  likeUnlikePost as likeAction,
+  deletePost as deletePostAction,
+} from "../../store/reducers/postsReducer";
 import DeletePostModal from "../../src/components/Modal/DeletePostModal";
+import { useForm } from "../../util/hooks";
+
+// UPDATE POST ACTION FROM POSTS REDUCER
+import { updatePost as updatedPostAction } from "../../store/reducers/postsReducer";
+import CommentCard from "../../src/components/Comment/CommentCard";
+import PostDetailedBox from "../../src/components/PostPage/PostDetailedBox";
+
+// INITIAL STATE FOR THE COMMENT INPUT
+const initialState = {
+  body: "",
+};
 
 //////////////////////////////////////
 // SINGLE PAGE PAGE //////////////////
@@ -47,7 +71,10 @@ const PostPage = () => {
   //////////////////////////////////////
 
   // FOR COMMENT INPUT
-  
+  const { onChange, onSubmit, values } = useForm(
+    createCommentCallback,
+    initialState
+  );
 
   const [state, setState] = useState({
     post: postData,
@@ -62,8 +89,10 @@ const PostPage = () => {
         ) !== -1
       : false;
   }, [state.post.likes.length]);
- 
-  
+
+  // USER PIC URL
+  const userPicUrl = useMemo(() => GET_RANDOM_ITEM(USER_AVATAR_URLS), []);
+
   //////////////////////////////////////////
   /// MUTATIONS ////////////////////////////
   //////////////////////////////////////////
@@ -93,20 +122,39 @@ const PostPage = () => {
   // DELETE MUTATION
   const [deletePost, {}] = useMutation(DELETE_POST, {
     update(proxy, result) {
+      // DISPATCH DELETE POST ACTION
+      dispatch(deletePostAction(result.data.deletePost.id));
 
-        // DISPATCH DELETE POST ACTION
-        dispatch(deletePostAction(result.data.deletePost.id));
-        
-        // FORCE USER TO BACK TO '/'
-        router.push("/");
-
+      // FORCE USER TO BACK TO '/'
+      router.push("/");
     },
     onError(err) {
-        console.log(`Error while deleting post: ${err}`);
+      console.log(`Error while deleting post: ${err}`);
     },
     variables: {
-        postId: postData.id,
-    }
+      postId: postData.id,
+    },
+  });
+
+  // CREATE COMMENT MUTATION
+  const [createComment, {}] = useMutation(CREATE_COMMENT, {
+    update(proxy, result) {
+      dispatch(updatedPostAction(result.data.createComment));
+
+      setState((prevState) => {
+        return {
+          ...prevState,
+          post: result.data.createComment,
+        };
+      });
+    },
+    onError(err) {
+      console.log(`Error while creating comment ${err}`);
+    },
+    variables: {
+      ...values,
+      postId: postData.id,
+    },
   });
 
   //////////////////////////////////////////
@@ -122,31 +170,34 @@ const PostPage = () => {
   const handleDeleteBtnClicked = useCallback(() => {
     // SET THE MODAL
     setState((prevState) => {
-        return {
-            ...prevState,
-            isShowDeleteModal: true,
-        }
+      return {
+        ...prevState,
+        isShowDeleteModal: true,
+      };
     });
   }, []);
 
   // HANDLE CONFIRM DELETE CLICK
-  const handleConfirmDeleteClick = useCallback( async(e:SyntheticEvent) => {
-        // CALL DELETE MUTATION FUNCTION
-        deletePost();
+  const handleConfirmDeleteClick = useCallback(async (e: SyntheticEvent) => {
+    // CALL DELETE MUTATION FUNCTION
+    deletePost();
   }, []);
 
   // HANDLE CANCEL DELETE CLICK
   const handleCancelDeleteClick = useCallback(() => {
     // HIDE THE DELETE MODAL
     setState((prevState) => {
-        return {
-            ...prevState,
-            isShowDeleteModal: false,
-        }
+      return {
+        ...prevState,
+        isShowDeleteModal: false,
+      };
     });
   }, []);
 
-
+  // CREATE COMMENT CALLBACK
+  async function createCommentCallback() {
+    await createComment();
+  }
 
   /////////////////////////////////////////////////
   /// COMPONENT RENDER ////////////////////////////
@@ -154,11 +205,10 @@ const PostPage = () => {
 
   return (
     <div className="flex flex-col w-full">
-
       <div className="flex flex-row justify-start w-[70%] m-auto mt-10 relative">
         {/* RANDOM AVATAR PIC */}
         <img
-          src={GET_RANDOM_ITEM(USER_AVATAR_URLS)}
+          src={userPicUrl}
           width="80px"
           height="70px"
           className="rounded-lg border mr-3 absolute left-[-90px]"
@@ -166,120 +216,66 @@ const PostPage = () => {
 
         {/* CONTENT CONTAINER */}
         <div className="h-full flex-1 flex-col flex">
+          {/* POST CONTENT BOX */}
+          <PostDetailedBox 
+            user={user}
+            postData={postData}
+            handleLikeBtnClick={handleLikeBtnClick}
+            statePost={state.post}
+            handleDeleteBtnClicked={handleDeleteBtnClicked}
+            isPostLiked={isPostLiked}
+          />
 
-            {/* POST CONTENT BOX */}
-            <div className="border flex-col shadow-lg rounded-md p-3"> 
+          {/* COMMENTS */}
 
-                {/* USERNAME + DATE + BODY */}
-                <div className="flex flex-col flex-1">
-                    {/* USERNAME */}
-                    <span className="font-bold text-xl">{postData.username}</span>
+          <div className="w-full h-[100px] mt-5 flex flex-col">
+            {/* INPUT (IF LOGGED IN) */}
+            {user.id ? (
+              <div className="relative flex flex-row justify-start border p-3 rounded-lg shadow-lg transition">
+                {/* INPUT */}
+                <input
+                  placeholder="Add a comment..."
+                  onChange={onChange}
+                  className="flex-1 outline-none"
+                  name="body"
+                />
 
-                    {/* DATE  */}
-                    <span className="text-gray-400 text-sm transition">
-                    {moment(postData.createdAt).fromNow(true)}
-                    </span>
+                {/* CONFIRM  */}
+                {(values as typeof initialState).body.length > 0 ? (
+                  <Button
+                    onClick={onSubmit}
+                    icon="check"
+                    btnCss="opacityInAnimation hover:shadow-lg hover:scale-[1.1] hover:bg-[#3492eb] hover:text-white transition rounded-md p-1"
+                  />
+                ) : null}
+              </div>
+            ) : null}
 
-                    {/* CONTENT */}
-                    <span className='truncate my-2 max-h-[25%] md:max-w-[300px] max-w-[150px] lg:max-w-[500px] xl:max-w-[800px] 2xl:max-w-[1000px]'>
-                    {postData.body}
-                    </span>
-                </div>
-
-                {/* LIKE BTN + COMMENTS BTN + DELETE BTN */}
-                <div
-                    className={`flex flex-row items-center ${
-                    user.username === postData.username
-                        ? "justify-between"
-                        : "justify-start"
-                    }`}
-                >
-                    {/* LIKE BTN */}
-                    <div className="flex justify-center align-center hover:shadow-lg hover:bg-gray-200 transition-all cursor-pointer">
-                    <Button
-                        onClick={user.id ? handleLikeBtnClick : () => {}}
-                        icon="favorite"
-                        btnCss={`p-1 transition px-3 border-[#66b5ff] border rounded-l-lg rounded-r-lg xl:rounded-r-none ${
-                        isPostLiked ? "bg-[#66b5ff]" : ""
-                        }`}
-                        iconCss={`text-[20px]  transition text-[#66b5ff] ${
-                        isPostLiked ? "text-red-400" : ""
-                        }`}
-                    />
-
-                    <span className="hidden xl:block h-full text-center p-1 px-2 pr-3 border-t border-r border-b border-t-[#66b5ff] border-r-[#66b5ff] border-b-[#66b5ff] rounded-r-lg">
-                        {state.post.likesCount}
-                    </span>
-                    </div>
-
-                    {/* DELETE BTN */}
-                    {user.id && user.username === postData.username ? (
-                    <Button
-                        onClick={handleDeleteBtnClicked}
-                        icon="delete"
-                        btnCss="py-1 px-2 bg-red-600 group border ml-2 transition rounded-lg hover:bg-white hover:border-red-600 hover:shadow-lg hover:scale-[1.1]"
-                        iconCss="text-[20px] text-white group-hover:text-red-600"
-                    />
-                    ) : null}
-                </div>
-            
+            {/* DIVIDER */}
+            <div className="w-full h-[1px] bg-gray-300 mt-5">
+              <span className="opacity-0">w</span>
             </div>
 
-            
-            {/* COMMENTS */}
-            <div className="w-full h-[100px] mt-5 flex flex-col">
-                        
-                {/* INPUT (IF LOGGED IN) */}
-                {
-                    user.id ?
-
-                    <div className="flex flex-row justify-start">
-
-                        {/* INPUT */}   
-                        <input 
-                            placeholder="Add a comment..."
-                            // onChange={}
-                            className="flex-1" 
-                        />
-
-                        {/* CONFIRM  */}
-                    </div>  
-
-                :null}
-
-                {/* LIST OF COMMENTS */}
-                {
-                    state.post.comments.map((comment) => {
-
-                        return (
-                            <div
-                                key={`post_comment_${state.post.id}_${comment.id}`}
-                                className="w-full border shadow-lg flex flex-col p-2"
-                            >
-
-                                {comment.body}
-
-                            </div>
-                        )
-                    })
-                }
-
-
-            </div>            
+            {/* LIST OF COMMENTS */}
+            {state.post.comments.map((comment) => {
+              return (
+                <CommentCard 
+                    comment={comment}
+                    key={`post_comment_${state.post.id}_${comment.id}`}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
 
-
-
       {/* DELETE MODAL */}
-      {
-        state.isShowDeleteModal === true ?
-
-        <DeletePostModal 
-            onCancelClick={handleCancelDeleteClick}
-            onConfirmClick={handleConfirmDeleteClick}
+      {state.isShowDeleteModal === true ? (
+        <DeletePostModal
+          onCancelClick={handleCancelDeleteClick}
+          onConfirmClick={handleConfirmDeleteClick}
         />
-      :null}
+      ) : null}
     </div>
   );
 };

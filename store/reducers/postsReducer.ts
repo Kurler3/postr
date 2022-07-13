@@ -72,6 +72,24 @@ export const postsReducer = createSlice({
             newState[postIndex] = action.payload;
 
             return newState;
+        },
+
+        // UPDATE POST
+        updatePost: (
+            state: Draft<typeof initialState>,
+            action: PayloadAction<PostType>,
+        ) => {
+
+            // COPY STATE
+            let newState = state;
+
+            // FIND INDEX OF POST TO UPDATE
+            let indexPost = newState.findIndex((post) => post.id === action.payload.id);
+
+            newState[indexPost] = action.payload;
+
+            return newState;
+
         }
     }
 });
@@ -80,7 +98,7 @@ export const postsReducer = createSlice({
 export const getPostsState = (state: {posts: PostType[]}) => state.posts;
 
 // EXPORT ALL ACTIONS
-export const {setPosts, addPost, deletePost, likeUnlikePost} = postsReducer.actions;
+export const {setPosts, addPost, deletePost, likeUnlikePost, updatePost} = postsReducer.actions;
 
 // EXPORT REDUCER
 export default postsReducer.reducer;
