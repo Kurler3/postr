@@ -10,9 +10,26 @@ export const FETCH_POSTS_QUERY = gql`
             likesCount 
             likes {
                 username
+                id
+                createdAt
+            }
+            comments {
+                id
+                body
+                username
+                createdAt
             }
             username
             createdAt
         }
     }
 `;
+
+// FETCH ARRAY OF ALL POSTS IDS
+export const FETCH_POSTS_IDS = gql`
+    query listPostsIds {
+        getPosts {
+            id
+        }
+    }
+`

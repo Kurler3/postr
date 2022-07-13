@@ -36,10 +36,6 @@ const PostCard:React.FC<Props> = ({
     const [deletePost, {}] = useMutation(DELETE_POST, {
         update(proxy, result) {
             
-            // DISPATCH DELETE POST ACTION 
-            console.log("Result: ", result);
-            
-            // dispatch(deletePost(result.data.deletePost.id));
             dispatch(deletePostAction(result.data.deletePost.id));
 
             setShowModal(() => false);
@@ -77,7 +73,7 @@ const PostCard:React.FC<Props> = ({
 
     // TRUE IF LIKES BY CURRENT USER, FALSE IF NOT
     const isPostLiked = useMemo(() => {
-        return post.likes.findIndex((like) => like.username === user.username) !== -1;
+        return user.id ? post.likes.findIndex((like) => like.username === user.username) !== -1 : false;
     }, [post.likes.length]);
     
     /////////////////////////////////////
@@ -92,8 +88,7 @@ const PostCard:React.FC<Props> = ({
     // HANDLE COMMENT CLICK
     const handleCommentBtnClick = useCallback((e:SyntheticEvent) => {
         
-       
-        
+    
     } ,[]);
 
 
@@ -116,10 +111,7 @@ const PostCard:React.FC<Props> = ({
         setShowModal(() => false);
     }, []);
 
-
-
-
-    console.log("PostLikes",  post.likes, post.likesCount);
+    console.log("PostLikes",  post.likes, post.likesCount, isPostLiked);
     
 
     return (
@@ -140,14 +132,20 @@ const PostCard:React.FC<Props> = ({
                     </span>
 
                     {/* CREATED AT */}
-                    <Link href={`/posts/${post.id}`}>
+                    <Link href={{
+                        pathname: `/posts/${post.id}`,
+                        query: {post : JSON.stringify(post)},
+                    }}>
                     
                         <span className="text-gray-400 text-sm hover:text-blue-400 cursor-pointer transition">
                             {moment(post.createdAt).fromNow(true)}
                         </span>
                     </Link>
                     {/* BODY */}
-                    <Link href={`/posts/${post.id}`}>
+                    <Link href={{
+                        pathname: `/posts/${post.id}`,
+                        query: {post : JSON.stringify(post)},
+                    }}>
                     
                         <span className='my-5 max-h-[30%] truncate max-w-full cursor-pointer'>
                             {post.body}
@@ -163,10 +161,10 @@ const PostCard:React.FC<Props> = ({
                 <div className='flex justify-center align-center hover:shadow-lg hover:bg-gray-200 transition-all cursor-pointer'>
 
                     <Button 
-                        onClick={handleLikeBtnClick}
+                        onClick={user.id ? handleLikeBtnClick : () => {}}
                         icon="favorite"
-                        btnCss={`p-1 px-3 border-[#66b5ff] border rounded-l-lg rounded-r-lg xl:rounded-r-none ${isPostLiked ? "text-red-500" : ""}`} 
-                        iconCss="text-[20px] text-[#66b5ff]"
+                        btnCss={`p-1 transition px-3 border-[#66b5ff] border rounded-l-lg rounded-r-lg xl:rounded-r-none ${isPostLiked ? "bg-[#66b5ff]" : ""}`} 
+                        iconCss={`text-[20px]  transition text-[#66b5ff] ${isPostLiked ? "text-red-400" : ""}`}
                     />
 
                     <span className='hidden xl:block h-full text-center p-1 px-2 pr-3 border-t border-r border-b border-t-[#66b5ff] border-r-[#66b5ff] border-b-[#66b5ff] rounded-r-lg' >
@@ -179,7 +177,7 @@ const PostCard:React.FC<Props> = ({
                 <div className='flex justify-center align-center hover:shadow-lg hover:bg-gray-200 transition-all cursor-pointer ml-2'>
 
                     <Button 
-                        onClick={handleLikeBtnClick}
+                        onClick={handleCommentBtnClick}
                         icon="forum"
                         btnCss="p-1 px-3 border-[#3492eb] border rounded-l-lg rounded-r-lg xl:rounded-r-none"  
                         iconCss="text-[20px] text-[#3492eb]"
