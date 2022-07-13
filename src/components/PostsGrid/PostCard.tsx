@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {memo, SyntheticEvent, useCallback, useState} from 'react';
+import {memo, SyntheticEvent, useCallback, useState, useMemo} from 'react';
 import { PostType } from '../../../types/postTypes';
 import { USER_AVATAR_URLS } from '../../../util/constants';
 import { GET_RANDOM_ITEM } from '../../../util/functions';
@@ -8,10 +8,11 @@ import Button from '../Customs/Button';
 import { useSelector } from '../../../store/store';
 import { getUserState } from '../../../store/reducers/usersReducer';
 import { useMutation } from '@apollo/client';
-import { DELETE_POST } from '../../../graphql/mutations';
+import { DELETE_POST, LIKE_POST } from '../../../graphql/mutations';
 import {useDispatch} from '../../../store/store';
 import DeletePostModal from '../Modal/DeletePostModal';
-import {deletePost as deletePostAction} from '../../../store/reducers/postsReducer';
+import {deletePost as deletePostAction, likeUnlikePost as likeAction} from '../../../store/reducers/postsReducer';
+
 
 
 interface Props {
@@ -32,7 +33,7 @@ const PostCard:React.FC<Props> = ({
     const user = useSelector(getUserState);
 
     // DELETE MUTATION
-    const [deletePost, {loading}] = useMutation(DELETE_POST, {
+    const [deletePost, {}] = useMutation(DELETE_POST, {
         update(proxy, result) {
             
             // DISPATCH DELETE POST ACTION 
@@ -52,13 +53,40 @@ const PostCard:React.FC<Props> = ({
         }
     });
 
+    // LIKE/UNLIKE POST MUTATION
+    const [likeUnlikePost, {loading}] = useMutation(LIKE_POST, {
+        update(proxy, result) {
+            
+            // DISPATCH DELETE POST ACTION 
+            console.log("Result: ", result);
+            
+            dispatch(likeAction(result.data.likePost));
+        },
+        onError(err) {
+            console.log("Something wrong happened :(");
+        },
+        variables: {
+            postId: post.id
+        }
+    });
+
+
+    /////////////////////////////////////
+    /// MEMO ////////////////////////////
+    /////////////////////////////////////
+
+    // TRUE IF LIKES BY CURRENT USER, FALSE IF NOT
+    const isPostLiked = useMemo(() => {
+        return post.likes.findIndex((like) => like.username === user.username) !== -1;
+    }, [post.likes.length]);
+    
     /////////////////////////////////////
     /// FUNCTIONS ///////////////////////
     /////////////////////////////////////
 
     // HANDLES CLICK LIKE
-    const handleLikeBtnClick = useCallback((e:SyntheticEvent) => {
-        
+    const handleLikeBtnClick = useCallback(async (e:SyntheticEvent) => {
+        await likeUnlikePost();
     }, []);
 
     // HANDLE COMMENT CLICK
@@ -80,7 +108,6 @@ const PostCard:React.FC<Props> = ({
     // CONFIRM DELETE FUNC
     const confirmDelete = useCallback(async () => {
         // CALL DELETE POST FUNC
-        console.log("Delete post: ", )
         await deletePost();
     }, []);
     
@@ -88,6 +115,12 @@ const PostCard:React.FC<Props> = ({
     const onCancelClick = useCallback(() => {
         setShowModal(() => false);
     }, []);
+
+
+
+
+    console.log("PostLikes",  post.likes, post.likesCount);
+    
 
     return (
         <div className="rounded-lg shadow-lg border bg-gray-100 border-gray-500 md:w-40 lg:w-60 w-60 h-48 m-auto my-4 relative flex flex-col opacityInAnimation">
@@ -132,7 +165,7 @@ const PostCard:React.FC<Props> = ({
                     <Button 
                         onClick={handleLikeBtnClick}
                         icon="favorite"
-                        btnCss="p-1 px-3 border-[#66b5ff] border rounded-l-lg rounded-r-lg xl:rounded-r-none" 
+                        btnCss={`p-1 px-3 border-[#66b5ff] border rounded-l-lg rounded-r-lg xl:rounded-r-none ${isPostLiked ? "text-red-500" : ""}`} 
                         iconCss="text-[20px] text-[#66b5ff]"
                     />
 

@@ -12,7 +12,7 @@ const PostsGrid:React.FC<Props> = ({
 }) => {
 
     return posts.length > 0 ? (
-        <div className='flex flex-col m-auto p-5 h-full w-[80%] md:grid-cols-2 md:grid lg:grid-cols-3 xl:grid-cols-4 my-5'>
+        <div className='flex flex-col m-auto p-5 h-full w-[80%] md:w-[100%] md:grid-cols-2 md:grid lg:grid-cols-3 xl:grid-cols-4 my-5'>
             {
                 posts.map((post) => {
                     return (

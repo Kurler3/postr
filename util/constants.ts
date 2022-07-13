@@ -2,10 +2,10 @@ export const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*
 
 // ARRAY OF USER AVATARS
 export const USER_AVATAR_URLS = [
-    // LUIGI!
-    'https://i.pinimg.com/originals/e0/8c/8c/e08c8cb5eb219811e414807b0f0b7c58.jpg',
-    // MARIO
-    'https://www.nicepng.com/png/full/32-328642_user-avatar-super-mario-avatar.png',
+    // // LUIGI!
+    // 'https://i.pinimg.com/originals/e0/8c/8c/e08c8cb5eb219811e414807b0f0b7c58.jpg',
+    // // MARIO
+    // 'https://www.nicepng.com/png/full/32-328642_user-avatar-super-mario-avatar.png',
     // LITTLE MUSHROOM GUY EHEH
     'https://png.pngitem.com/pimgs/s/22-224371_sonic-racing-no-constancy-mario-goomba-hd-png.png',
     // YOSHI

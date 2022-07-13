@@ -81,3 +81,30 @@ export const DELETE_POST = gql`
         }
     }
 `
+
+// LIKE/UNLIKE POST
+export const LIKE_POST = gql`
+    mutation likePost(
+        $postId: ID!
+    ) {
+        likePost(postId: $postId) {
+            id
+            body
+            createdAt
+            username
+            comments {
+                id
+                body
+                username
+                createdAt
+            }
+            likes {
+                id
+                username
+                createdAt
+            }
+            likesCount
+            commentsCount        
+        }
+    }
+`

@@ -15,11 +15,15 @@ import Head from 'next/head';
 // REACT LOADER CSS
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
+// TOASTIFY CSS
+import 'react-toastify/dist/ReactToastify.min.css';
+
 // IMPORT REDUX PROVIDER
 import {Provider} from 'react-redux';
 
 // IMPORT STORE
 import {store, useSelector} from '../store/store';
+import { ToastContainer } from 'react-toastify';
 
 
 // THIS COMPONENT CONTAINS THE ENTIRE APP (THIS IS THE APP ROOT)
@@ -42,8 +46,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Navbar />
 
         {/* COMPONENT */}
-        <Component {...pageProps}/>
 
+         <Component {...pageProps}/>
+        
+       
+         <ToastContainer />
       </Provider>
     </ApolloProvider>
   )

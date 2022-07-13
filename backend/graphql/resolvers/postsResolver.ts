@@ -16,7 +16,7 @@ export default {
                 return posts;
             } catch (error) {
                 console.log("Error fetching all posts: ", error);
-                throw new Error(error!.toString());
+                throw new Error((error as string));
             }
         },
 
@@ -38,7 +38,7 @@ export default {
                 }
             } catch (error) {
                 console.log("Error fetching single post");
-                throw new Error(error!.toString());
+                throw new Error((error as string));
             }
         }
     },

@@ -40,7 +40,9 @@ const Home: NextPage = () => {
 
   // WILL AUTOMATICALLY FETCH THIS IN THE SERVER BECAUSE I SET ssrMode: true IN THE APOLLO CLIENT
   // WHICH IS PROVIDED USING THE ApolloProvider COMPONENT WRAPPED AROUND _app.tsx
-  const {loading, data} = useQuery(FETCH_POSTS_QUERY, {skip});
+  const {loading, data} = useQuery(FETCH_POSTS_QUERY,
+     //{skip}
+     );
   
 
   // GET USER
