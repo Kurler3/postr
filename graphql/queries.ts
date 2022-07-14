@@ -18,6 +18,11 @@ export const FETCH_POSTS_QUERY = gql`
                 body
                 username
                 createdAt
+                likes {
+                    id
+                    username
+                    createdAt
+                }
             }
             username
             createdAt

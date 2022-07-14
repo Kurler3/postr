@@ -64,6 +64,11 @@ export const CREATE_POST = gql`
                 body
                 username
                 createdAt
+                likes {
+                    id
+                    username
+                    createdAt
+                }
             }
             commentsCount
             likesCount
@@ -97,6 +102,11 @@ export const LIKE_POST = gql`
                 body
                 username
                 createdAt
+                likes {
+                    id
+                    username
+                    createdAt
+                }
             }
             likes {
                 id
@@ -125,6 +135,11 @@ export const CREATE_COMMENT = gql`
                 body
                 username
                 createdAt
+                likes {
+                    id
+                    username
+                    createdAt
+                }
             }
             likes {
                 id

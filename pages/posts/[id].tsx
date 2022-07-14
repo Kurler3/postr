@@ -33,6 +33,7 @@ import { useForm } from "../../util/hooks";
 import { updatePost as updatedPostAction } from "../../store/reducers/postsReducer";
 import CommentCard from "../../src/components/Comment/CommentCard";
 import PostDetailedBox from "../../src/components/PostPage/PostDetailedBox";
+import PostCommentsContainer from "../../src/components/PostPage/PostCommentsContainer";
 
 // INITIAL STATE FOR THE COMMENT INPUT
 const initialState = {
@@ -227,45 +228,15 @@ const PostPage = () => {
           />
 
           {/* COMMENTS */}
-
-          <div className="w-full h-[100px] mt-5 flex flex-col">
-            {/* INPUT (IF LOGGED IN) */}
-            {user.id ? (
-              <div className="relative flex flex-row justify-start border p-3 rounded-lg shadow-lg transition">
-                {/* INPUT */}
-                <input
-                  placeholder="Add a comment..."
-                  onChange={onChange}
-                  className="flex-1 outline-none"
-                  name="body"
-                />
-
-                {/* CONFIRM  */}
-                {(values as typeof initialState).body.length > 0 ? (
-                  <Button
-                    onClick={onSubmit}
-                    icon="check"
-                    btnCss="opacityInAnimation hover:shadow-lg hover:scale-[1.1] hover:bg-[#3492eb] hover:text-white transition rounded-md p-1"
-                  />
-                ) : null}
-              </div>
-            ) : null}
-
-            {/* DIVIDER */}
-            <div className="w-full h-[1px] bg-gray-300 mt-5">
-              <span className="opacity-0">w</span>
-            </div>
-
-            {/* LIST OF COMMENTS */}
-            {state.post.comments.map((comment) => {
-              return (
-                <CommentCard 
-                    comment={comment}
-                    key={`post_comment_${state.post.id}_${comment.id}`}
-                />
-              );
-            })}
-          </div>
+          <PostCommentsContainer 
+            user={user}
+            onChange={onChange}
+            values={values}
+            initialState={initialState}
+            onSubmit={onSubmit}
+            statePost={state.post}
+          />
+          
         </div>
       </div>
 

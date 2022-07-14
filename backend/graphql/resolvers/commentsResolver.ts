@@ -38,6 +38,7 @@ export default {
                     body: args.body,
                     username: authenticatedUser.username,
                     createdAt: new Date().toISOString(),
+                    likes: [],
                 });
 
                 // UPDATE POST

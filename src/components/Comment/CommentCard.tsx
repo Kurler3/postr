@@ -9,6 +9,8 @@ const CommentCard:React.FC<Props> = ({
     comment,
 }) => {
 
+    console.log('Comment: ', comment.likes);
+
     return (
         <div
             className="w-full border shadow-lg flex flex-col p-2 mt-5 rounded-lg"
