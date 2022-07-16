@@ -69,6 +69,12 @@ export const CREATE_POST = gql`
                     username
                     createdAt
                 }
+                dislikes {
+                    id
+                    username
+                    createdAt
+                }
+                voteCount
             }
             commentsCount
             likesCount
@@ -107,6 +113,12 @@ export const LIKE_POST = gql`
                     username
                     createdAt
                 }
+                dislikes {
+                    id
+                    username
+                    createdAt
+                }
+                voteCount
             }
             likes {
                 id
@@ -140,6 +152,12 @@ export const CREATE_COMMENT = gql`
                     username
                     createdAt
                 }
+                dislikes {
+                    id
+                    username
+                    createdAt
+                }
+                voteCount
             }
             likes {
                 id
@@ -151,3 +169,85 @@ export const CREATE_COMMENT = gql`
         }
     }
 `
+
+export const LIKE_COMMENT_MUTATION = gql`
+    mutation likeComment(
+        $postId: ID!
+        $commentId: ID!
+    ) {
+        likeComment(
+            postId: $postId
+            commentId: $commentId
+        ) {
+            id
+            body
+            createdAt
+            username
+            comments {
+                id
+                body
+                username
+                createdAt
+                likes {
+                    id
+                    username
+                    createdAt
+                }
+                dislikes {
+                    id
+                    username
+                    createdAt
+                }
+                voteCount
+            }
+            likes {
+                id
+                username
+                createdAt
+            }
+            likesCount
+            commentsCount        
+        }
+    }
+`
+
+
+// LIKE/UNLIKE POST
+export const DISLIKE_COMMENT_MUTATION = gql`
+    mutation dislikePost(
+        $postId: ID!
+    ) {
+        likePost(postId: $postId) {
+            id
+            body
+            createdAt
+            username
+            comments {
+                id
+                body
+                username
+                createdAt
+                likes {
+                    id
+                    username
+                    createdAt
+                }
+                dislikes {
+                    id
+                    username
+                    createdAt
+                }
+                voteCount
+            }
+            likes {
+                id
+                username
+                createdAt
+            }
+            likesCount
+            commentsCount        
+        }
+    }
+`
+
+

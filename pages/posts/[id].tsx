@@ -140,8 +140,10 @@ const PostPage = () => {
   // CREATE COMMENT MUTATION
   const [createComment, {}] = useMutation(CREATE_COMMENT, {
     update(proxy, result) {
+      console.log("Create: ", result.data.createComment, {...values, postId: postData.id});
       dispatch(updatedPostAction(result.data.createComment));
-
+      
+      
       setState((prevState) => {
         return {
           ...prevState,

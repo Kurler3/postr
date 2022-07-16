@@ -1,6 +1,9 @@
+import { useMutation } from '@apollo/client';
+import { update } from 'lodash';
 import moment from 'moment';
-import {memo} from 'react';
+import {memo, useCallback} from 'react';
 import { PostComment } from '../../../types/postTypes';
+import { useDispatch } from "../../../store/store";
 
 interface Props {
     comment: PostComment;
@@ -9,26 +12,69 @@ const CommentCard:React.FC<Props> = ({
     comment,
 }) => {
 
-    console.log('Comment: ', comment.likes);
+    // INIT DISPATCH
+    const dispatch = useDispatch();
+
+    console.log('Comment: ', comment);
+
+    // LIKE MUTATION
+    const [onLikeComment, {loading}] = useMutation( ,
+        update(proxy, result) {
+
+            // DISPATCH ACTION TO STORE
+            dispatch()
+        },
+
+    ),
+
+    // DISLIKE MUTATION
+
+
+    const handleVoteClick = useCallback((isLiking:boolean) => {
+
+
+    }, []),
+    
+
 
     return (
         <div
-            className="w-full border shadow-lg flex flex-col p-2 mt-5 rounded-lg"
+            className="w-full border shadow-lg flex flex-row p-2 mt-5 rounded-lg"
         >
-                  {/* USERNAME */}
-                  <span className="font-bold text-xl">{comment.username}</span>
+            {/* LEFT CONTAINER */}
+            <div className='flex flex-col flex-1'>
+                 {/* USERNAME */}
+                 <span className="font-bold text-xl">{comment.username}</span>
 
-                  {/* DATE  */}
-                  <span className="text-gray-400 text-sm transition">
+                    {/* DATE  */}
+                    <span className="text-gray-400 text-sm transition">
                     {moment(comment.createdAt).fromNow(true)}
-                  </span>
+                    </span>
 
-                  {/* CONTENT */}
-                  <span className="truncate my-2 max-h-[25%] md:max-w-[300px] max-w-[150px] lg:max-w-[500px] xl:max-w-[800px] 2xl:max-w-[1000px]">
+                    {/* CONTENT */}
+                    <span className="truncate my-2 max-h-[25%] md:max-w-[300px] max-w-[150px] lg:max-w-[500px] xl:max-w-[800px] 2xl:max-w-[1000px]">
                     {comment.body}
-                  </span>
+                    </span>
 
-                  {/* BTN CONTAINER */}
+                    {/* BTN CONTAINER */}
+            </div>
+
+            {/* RIGHT CONTAINER (VOTING)*/}
+            <div className='flex flex-col justify-center items-center h-full'>
+
+                {/* LIKE BTN */}
+                <div className='material-icons transition hover:text-red-500 cursor-pointer'>
+                    arrow_upward
+                </div>
+
+                {/* VOTES COUNT */}
+                <span>0</span>
+
+                <div className='material-icons transition hover:text-blue-400 cursor-pointer'>
+                    arrow_downward
+                </div>
+            </div>
+
         </div>
     );
 };

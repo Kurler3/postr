@@ -23,6 +23,12 @@ export const FETCH_POSTS_QUERY = gql`
                     username
                     createdAt
                 }
+                dislikes {
+                    id
+                    username
+                    createdAt
+                }
+                voteCount
             }
             username
             createdAt

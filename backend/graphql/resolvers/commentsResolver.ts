@@ -2,7 +2,8 @@ import { NextApiRequest } from "next";
 import checkAuth from "../../../util/check-auth";
 import { UserInputError, AuthenticationError } from "apollo-server-micro";
 import Post from "../../mongodb/models/Post";
-import { PostComment } from "../../../types/postTypes";
+import { PostComment, PostLike } from "../../../types/postTypes";
+import {v4 as uuid} from "uuid";
 
 
 export default {
@@ -39,6 +40,7 @@ export default {
                     username: authenticatedUser.username,
                     createdAt: new Date().toISOString(),
                     likes: [],
+                    dislikes: [],
                 });
 
                 // UPDATE POST
@@ -97,6 +99,138 @@ export default {
             }
 
 
+        },
+
+        // LIKE COMMENT
+        likeComment: async (_:null, args: {postId: string|number, commentId: string|number},context: {req: NextApiRequest}) => {
+
+            let loggedUser = checkAuth(context);
+
+            // IF LOGGED
+            if(loggedUser) {
+                
+                // FIND THE POST BEING EDITED
+                let post = await Post.findById(args.postId);
+
+                // IF POST NOT FOUND IN DB
+                if(!post) throw new UserInputError("Post not found!");
+                
+                // FIND COMMENT IN THE POST
+                let commentInPostIndex = post.comments.findIndex((comment:PostComment) => comment.id === args.commentId);
+
+                // IF EXISTS
+                if(post.comments && post.comments[commentInPostIndex]) {
+                    // INIT COMMENT WITH THE INDEX
+                    let commentInPost = post.comments[commentInPostIndex];
+                    // IF USER IS IN LIKES ARRAY, THEN REMOVE IT
+                    if(commentInPost.likes.find((like:PostLike) => like.username === loggedUser!.username)) {
+                        // FILTER OUT THE LIKE INSIDE THE COMMENT
+                        commentInPost.likes = commentInPost.likes.filter((like: PostLike) => like.username!==loggedUser!.username);
+                    }
+                    // OTHERWISE ADD ID
+                    else {
+                        // PUSH NEW LIKE
+                        commentInPost.likes.push({
+                            id: uuid(),
+                            username: loggedUser.username,
+                            createdAt: new Date().toISOString(),
+                        });
+                    }
+                    
+                    // COPY THE POST COMMENTS
+                    let newComments = post.comments;
+
+                    // SUBSTITUTE NEW COMMENT IN THE INDEX OF THE COMMENT
+                    newComments[commentInPostIndex] = commentInPost;
+
+                    // RETURN POST WITH NEW COMMENTS ARRAY
+                    return {
+                        ...post,
+                        comments: newComments,
+                    };
+                    
+                } else {
+                    throw new UserInputError("Comment doesnt exist :(");
+                }
+
+
+            } else {
+                console.log("Not authorized to like comment :/"); 
+            }
+
+        },
+
+        // DISLIKE COMMENT
+        dislikeComment: async (_:null, args: {postId: string|number, commentId: string|number},context: {req: NextApiRequest}) => {
+
+            // CHECK AUTH
+            let loggedUser = checkAuth(context);
+
+            // IF AUTH THEN CONTINUE
+            if(loggedUser) {
+
+                // GET POST
+                let post = await Post.findById(args.postId);
+
+                // IF CANT FIND POST THROW ERROR
+                if(!post) {
+                    throw new UserInputError("Post not found :(");
+                }
+
+                // FIND COMMENT INDEX IN POST COMMENTS
+                let commentInPostIndex = post.comments.findIndex((comment:PostComment) => comment.id === args.commentId);
+
+                // IF EXISTS
+                if(commentInPostIndex > -1) {
+
+                    // INIT
+                    let commentInPost = post.comments[commentInPostIndex] as PostComment;
+                    
+                    let newDislikes = commentInPost.dislikes ?? [];
+
+                    // TRY FIND INDEX OF USER IN DISLIKES
+                    let userDislikeIndex = newDislikes.findIndex((dislike:PostLike) => dislike.username === loggedUser!.username);
+
+                    // IF WAS ALREADY IN DISLIKES ARRAY, THEN REMOVE USER FROM IT
+                    if(userDislikeIndex > -1) {
+
+                        newDislikes.splice(userDislikeIndex, 1);
+
+                    }
+                    // ELSE PUSH IT TO THE DISLIKES ARRAY
+                    else {
+                        newDislikes.push({
+                            id: uuid(),
+                            username: loggedUser.username,
+                            createdAt: new Date().toISOString(),
+                        });
+                    }
+
+                    // INIT NEW COMMENTS ARRAY
+                    let newComments = post.comments;
+
+                    // UPDATE COMMENT WITH NEW DISLIKES ARRAY :)
+                    newComments[commentInPostIndex] = {
+                        ...commentInPost,
+                        dislikes: newDislikes,
+                    };
+
+                    // RETURN POST WITH UPDATED COMMENTS
+                    return {
+                          ...post,
+                        comments: newComments,
+                    };
+
+                }
+                else {
+                    throw new UserInputError("Comment not found :(");
+                }
+
+            } 
+            // LOG ERROR
+            else {
+                console.log("Not authorized to like comment :/");
+            }
         }
     }
 }

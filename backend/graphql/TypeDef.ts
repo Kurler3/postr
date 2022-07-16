@@ -17,6 +17,8 @@ const typeDefs = gql`
         username: String!
         createdAt: String!
         likes: [Like]
+        dislikes: [Like]
+        voteCount: Int!
     }
 
     # POST TYPE
@@ -65,6 +67,8 @@ const typeDefs = gql`
         # COMMENT
         createComment(postId: ID!, body: String!): Post!
         deleteComment(postId: ID!, commentId: ID!): Post!
+        likeComment(postId:ID!, commentId: ID!):Post!
+        dislikeComment(postId: ID!, commentId:ID!):Post!
         # LIKE
         likePost(postId: ID!): Post!
     }

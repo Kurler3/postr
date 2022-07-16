@@ -1,4 +1,4 @@
-import { PostType } from '../../../types/postTypes';
+import { PostComment, PostType } from '../../../types/postTypes';
 import commentsResolver from './commentsResolver';
 import  postsResolvers  from './postsResolver';
 import usersResolver from './usersResolver';
@@ -17,6 +17,12 @@ export default {
         commentsCount: (parent: PostType) => {
             return parent.comments.length;
         }
+    },
+
+    Comment: {
+        voteCount: (parent:PostComment) => {
+            return parent.likes && parent.dislikes ? parent.likes.length - parent.dislikes.length : 0;
+        }   
     },
 
     // QUERIES

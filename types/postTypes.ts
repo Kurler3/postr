@@ -5,6 +5,8 @@ export interface PostComment {
     username: string;
     createdAt: string;
     likes: PostLike[];
+    dislikes: PostLike[];
+    voteCount: number;
 }
 
 // LIKE
