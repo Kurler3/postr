@@ -33,15 +33,21 @@ export default {
                 if(!post) {
                     throw new UserInputError("Post not found");
                 }
-                
-                // UPDATE POST DOCUMENT IN MONGODB WITH NEW COMMENT
-                post.comments.unshift({
+
+                // INIT NEW COMMENT
+                let newComment = {
+                    id: uuid(),
                     body: args.body,
                     username: authenticatedUser.username,
                     createdAt: new Date().toISOString(),
                     likes: [],
                     dislikes: [],
-                });
+                };
+
+                console.log("NewComment: ", newComment)
+
+                // UPDATE POST DOCUMENT IN MONGODB WITH NEW COMMENT
+                post.comments.unshift(newComment);
 
                 // UPDATE POST
                 await post.save();
@@ -112,6 +118,8 @@ export default {
                 // FIND THE POST BEING EDITED
                 let post = await Post.findById(args.postId);
 
+                console.log("PostComment: ", post)
+
                 // IF POST NOT FOUND IN DB
                 if(!post) throw new UserInputError("Post not found!");
                 
@@ -122,15 +130,20 @@ export default {
                 if(post.comments && post.comments[commentInPostIndex]) {
                     // INIT COMMENT WITH THE INDEX
                     let commentInPost = post.comments[commentInPostIndex];
+
+                    // INIT NEW LIKES ARRAY
+                    let newLikes = commentInPost.likes ?? [];
+
+
                     // IF USER IS IN LIKES ARRAY, THEN REMOVE IT
-                    if(commentInPost.likes.find((like:PostLike) => like.username === loggedUser!.username)) {
+                    if(newLikes.find((like:PostLike) => like.username === loggedUser!.username)) {
                         // FILTER OUT THE LIKE INSIDE THE COMMENT
-                        commentInPost.likes = commentInPost.likes.filter((like: PostLike) => like.username!==loggedUser!.username);
+                        newLikes = newLikes.filter((like: PostLike) => like.username!==loggedUser!.username);
                     }
                     // OTHERWISE ADD ID
                     else {
                         // PUSH NEW LIKE
-                        commentInPost.likes.push({
+                        newLikes.push({
                             id: uuid(),
                             username: loggedUser.username,
                             createdAt: new Date().toISOString(),
@@ -140,14 +153,18 @@ export default {
                     // COPY THE POST COMMENTS
                     let newComments = post.comments;
 
+                    // ASSIGN NEW LIKES ARRAY TO COMMENT
+                    commentInPost.likes = newLikes;
+
                     // SUBSTITUTE NEW COMMENT IN THE INDEX OF THE COMMENT
                     newComments[commentInPostIndex] = commentInPost;
 
+                    console.log("Post: ", post);
+
+                    post.comments = newComments;
+
                     // RETURN POST WITH NEW COMMENTS ARRAY
-                    return {
-                        ...post,
-                        comments: newComments,
-                    };
+                    return post;
                     
                 } else {
                     throw new UserInputError("Comment doesnt exist :(");

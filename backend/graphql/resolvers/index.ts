@@ -21,7 +21,11 @@ export default {
 
     Comment: {
         voteCount: (parent:PostComment) => {
-            return parent.likes && parent.dislikes ? parent.likes.length - parent.dislikes.length : 0;
+
+            let likesCount = parent.likes ? parent.likes.length : 0;
+            let dislikesCount = parent.dislikes ? parent.dislikes.length : 0;
+
+            return likesCount - dislikesCount;
         }   
     },
 

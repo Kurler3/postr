@@ -176,8 +176,7 @@ export const LIKE_COMMENT_MUTATION = gql`
         $commentId: ID!
     ) {
         likeComment(
-            postId: $postId
-            commentId: $commentId
+            postId: $postId, commentId: $commentId
         ) {
             id
             body
@@ -214,10 +213,14 @@ export const LIKE_COMMENT_MUTATION = gql`
 
 // LIKE/UNLIKE POST
 export const DISLIKE_COMMENT_MUTATION = gql`
-    mutation dislikePost(
+    mutation dislikeComment(
         $postId: ID!
+        $commentId: ID!
     ) {
-        likePost(postId: $postId) {
+        dislikeComment(
+            postId: $postId
+            commentId: $commentId
+        ) {
             id
             body
             createdAt

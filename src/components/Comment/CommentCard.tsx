@@ -4,12 +4,15 @@ import moment from 'moment';
 import {memo, useCallback} from 'react';
 import { PostComment } from '../../../types/postTypes';
 import { useDispatch } from "../../../store/store";
+import { DISLIKE_COMMENT_MUTATION, LIKE_COMMENT_MUTATION } from '../../../graphql/mutations';
 
 interface Props {
     comment: PostComment;
+    postId: string | number;
 }
 const CommentCard:React.FC<Props> = ({
     comment,
+    postId,
 }) => {
 
     // INIT DISPATCH
@@ -18,24 +21,44 @@ const CommentCard:React.FC<Props> = ({
     console.log('Comment: ', comment);
 
     // LIKE MUTATION
-    const [onLikeComment, {loading}] = useMutation( ,
-        update(proxy, result) {
+    const [onLikeComment, {loading}] = useMutation(LIKE_COMMENT_MUTATION,{
+            update(proxy, result) {
 
-            // DISPATCH ACTION TO STORE
-            dispatch()
+            console.log("LikeComment: ", result);
+
         },
-
-    ),
+        onError(err) {
+            console.log("Error while liking comment:", err);
+        },
+        variables: {
+            postId,
+            commentId: comment.id,
+        },
+    }); 
 
     // DISLIKE MUTATION
+    const [onDislikeComment, _] = useMutation(DISLIKE_COMMENT_MUTATION, {
+        update(proxy, result) {
+            // LOG RESULT 
+            console.log("DislikeComment: ", result);
 
-
-    const handleVoteClick = useCallback((isLiking:boolean) => {
-
-
-    }, []),
+        },
+        onError(err) {
+            console.log("Error while disliking comment: ", err);
+        },
+        variables: {
+            postId,
+            commentId: comment.id,
+        },
+    })
     
+    // HANDLE VOTE CLICK
+    const handleVoteClick = useCallback(async (isLiking:boolean) => {
 
+        if(isLiking) await onLikeComment();
+        else await onDislikeComment();
+
+    }, []);
 
     return (
         <div
@@ -63,14 +86,19 @@ const CommentCard:React.FC<Props> = ({
             <div className='flex flex-col justify-center items-center h-full'>
 
                 {/* LIKE BTN */}
-                <div className='material-icons transition hover:text-red-500 cursor-pointer'>
+                <div  
+                    onClick={(e) => handleVoteClick(true)}
+                    className='material-icons transition hover:text-red-500 cursor-pointer'
+                >
                     arrow_upward
                 </div>
 
                 {/* VOTES COUNT */}
-                <span>0</span>
+                <span>{comment.voteCount}</span>
 
-                <div className='material-icons transition hover:text-blue-400 cursor-pointer'>
+                <div 
+                    onClick={(e) => handleVoteClick(false)}
+                    className='material-icons transition hover:text-blue-400 cursor-pointer'>
                     arrow_downward
                 </div>
             </div>

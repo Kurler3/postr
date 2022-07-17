@@ -60,6 +60,7 @@ const PostCommentsContainer:React.FC<Props> = ({
                 <CommentCard
                     comment={comment}
                     key={`post_comment_${statePost.id}_${comment.id}`}
+                    postId={statePost.id}
                 />
               );
             })}
